@@ -588,6 +588,64 @@ if(isset($_POST) && isset($_POST['action'])) {
 # Display settings of planet
 ##############################
 		case 'list':
+		
+			$output = '<table id="settinglist" class="table-options">
+			<thead>
+				<tr>
+					<th class="tc1" scope="col">'.T_('Option').'</th>
+					<th class="tc2" scope="col">'.T_('Value').'</th>
+					<th class="tc3" scope="col">'.T_('Action').'</th>
+				</tr>
+			</thead>
+			<tbody>';
+			
+			foreach ($blog_settings->dumpSettings() as $arr_setting) {
+				if(!empty($arr_setting['label'])) {
+					$obj = json_decode($arr_setting['label']);
+					$output .= '<tr>
+					<td class="tc1 tcl">'.T_($obj->{'name'});
+					if ($obj->{'comment'}) {
+						$output .= '<div class="comment">
+							<p>'.T_($obj->{'comment'}).'</p>
+						</div>';
+					}
+					$output .= '</td>
+					<td class="tc2 tcl">'.$arr_setting['value'].'</td>
+					<td class="tc3 tcc">
+						<a href="#" onclick="javascript:edit('.$arr_setting['id'].')">
+							<img src="meta/icons/action-edit.png" title="'.T_('Update').'" />
+						</a>
+						<div id="form_'.$arr_setting['id'].'" style="display:none;">
+							<form method="POST" id="form_'.$arr_setting['id'].'">';
+							switch (trim($obj->{'type'})) {
+								case 'select':
+									$output .= '';
+								break;
+								
+								case 'checkbox':
+									$output .= '';
+								break;
+								
+								case 'textarea':
+									$output .= '<textarea id="'.$arr_setting['id'].'" name="'.$arr_setting['id'].'" >'.$arr_setting['value'].'</textarea>';
+								break;
+								
+								default:
+									$output .= '<input id="'.$arr_setting['id'].'" type="text" name="'.$arr_setting['id'].'" value="'.$arr_setting['value'].'" />';
+								break;
+							}
+							$output .= '</form>
+						</div>
+					</td>
+					</tr>';
+				}
+			}
+			$output .= '</tbody>
+			</table>';
+			
+			print $output;
+			
+			/*
 			# Load value from setting table
 			$title = stripslashes($blog_settings->get('planet_title'));
 			$desc = stripslashes($blog_settings->get('planet_desc'));
@@ -793,7 +851,7 @@ if(isset($_POST) && isset($_POST['action'])) {
 			$output .= '</tr>
 			</table>';
 			
-		print $output;
+		print $output;*/
 		break;
 		}
 }
