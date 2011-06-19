@@ -622,6 +622,31 @@ if(isset($_POST) && isset($_POST['action'])) {
 									$output .= '';
 								break;
 								
+								case 'select_dir':
+									$root_dir = dirname(__FILE__).'/../..';
+									$path_dir = $root_dir.$obj->{'value'}.'/';
+									$dir_handle = @opendir($path_dir) or die("Unable to open $lang_path");
+									$output .= '<select name="'.$arr_setting['id'].'" class="field">';
+									while ($file = readdir($dir_handle)){
+										if ($file != "." && $file != ".." && $file != ".svn" && file != ".bzr" && $file != ".DS_Store" && $file != ".htaccess" && is_dir($path_dir.$file)) {
+											if ($file == $arr_setting['value']) {
+												$output .= '<option value="'.$file.'" selected >'.$file.'</option>'."\n";
+											} else {
+												$output .= '<option value="'.$file.'" >'.$file.'</option>'."\n";
+											}
+										}
+									}
+									closedir($dir_handle);
+									if ($arr_setting['id'] == 'planet_lang') {
+										if ($arr_setting['value'] == 'en') {
+												$output .= '<option value="en" selected >en</option>'."\n";
+										} else {
+											$output .= '<option value="en" >en</option>'."\n";
+										}
+									}
+									$output .= '</select>';
+								break;
+								
 								case 'checkbox':
 									$output .= '';
 								break;
