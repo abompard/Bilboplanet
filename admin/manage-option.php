@@ -49,22 +49,15 @@ include_once(dirname(__FILE__).'/sidebar.php');
 		<div id="flash-log" style="display:none;">
 			<div id="flash-msg"><!-- spanner --></div>
 		</div>
-		<div id="options-button-update" class="button br3px">
-			<?php echo '<a class="edit" href="#" title="'.T_('Update').'" onclick="javascript:formopt();">'.T_('Update').'</a>';?>
-		</div>
-		<div id="options-button-close"  class="button br3px">
-			<?php echo '<a class="close-button" href="#" title="'.T_('Close').'" onclick="javascript:listopt();">'.T_('Close').'</a>';?>
-		</div>
-		<br /><br />
 		<fieldset>
 			<legend><?php echo T_('Options');?></legend>
 				<div class="message">
 					<p><?php echo T_('Configuration settings Planet.');?></p>
 				</div>
 			<br />
-			<div id="options-list" style="display:none;"><!-- List --></div>
-			<div id="options-form" style="display:none;"><!-- Form To Update --></div>
+			<div id="options-list"><!-- List settings --></div>
 		</fieldset>
+		
 <?php include(dirname(__FILE__).'/footer.php');
 else:
 	$page_url = urlencode(http::getHost().$_SERVER['REQUEST_URI']);

@@ -603,20 +603,31 @@ if(isset($_POST) && isset($_POST['action'])) {
 				if(!empty($arr_setting['label'])) {
 					$obj = json_decode($arr_setting['label']);
 					$output .= '<tr>
-					<td class="tc1 tcl">'.T_($obj->{'name'});
+					<td class="tc1 tcl">'.T_(html_entity_decode(T_($obj->{'name'}), ENT_QUOTES, 'UTF-8'));
 					if ($obj->{'comment'}) {
 						$output .= '<div class="comment">
-							<p>'.T_($obj->{'comment'}).'</p>
+							<p>'.html_entity_decode(T_($obj->{'comment'}), ENT_QUOTES, 'UTF-8').'</p>
 						</div>';
 					}
 					$output .= '</td>
-					<td class="tc2 tcl">'.$arr_setting['value'].'</td>
-					<td class="tc3 tcc">
-						<a href="#" onclick="javascript:edit('.$arr_setting['id'].')">
+					<td class="tc2 tcl">';
+					if ($arr_setting['type'] == 'boolean') {
+						if ($arr_setting['value']) {
+							$output .= '<img src="meta/icons/true.png" title="'.T_('Enabled').'" />';
+						} else {
+							$output .= '<img src="meta/icons/false.png" title="'.T_('Disabled').'" />';
+						}
+					} else {
+						$output .= $arr_setting['value'];
+					}
+					$output .= '</td>
+						<td class="tc3 tcc">
+						<a href="#" onclick="javascript:edit_setting(\''.$arr_setting['id'].'\');">
 							<img src="meta/icons/action-edit.png" title="'.T_('Update').'" />
 						</a>
 						<div id="form_'.$arr_setting['id'].'" style="display:none;">
-							<form method="POST" id="form_'.$arr_setting['id'].'">';
+							<form>';
+							$output .= '<label class="required" for="content">'.T_($obj->{'name'}).' : <br />';
 							switch (trim($obj->{'type'})) {
 								case 'select':
 									$output .= '';
@@ -637,6 +648,7 @@ if(isset($_POST) && isset($_POST['action'])) {
 										}
 									}
 									closedir($dir_handle);
+									// Default lang
 									if ($arr_setting['id'] == 'planet_lang') {
 										if ($arr_setting['value'] == 'en') {
 												$output .= '<option value="en" selected >en</option>'."\n";
@@ -648,18 +660,26 @@ if(isset($_POST) && isset($_POST['action'])) {
 								break;
 								
 								case 'checkbox':
-									$output .= '';
+									$output .= '<p style="text-align: center">';
+									if ($arr_setting['value']) {
+										$output .= '<input type="checkbox" class="input field" id="'.$arr_setting['id'].'" name="'.$arr_setting['id'].'" checked/>';
+									} else {
+										$output .= '<input type="checkbox" class="input field" id="'.$arr_setting['id'].'" name="'.$arr_setting['id'].'"/>';
+									}
+									$output .= '</p>';
 								break;
 								
 								case 'textarea':
-									$output .= '<textarea id="'.$arr_setting['id'].'" name="'.$arr_setting['id'].'" >'.$arr_setting['value'].'</textarea>';
+									$output .= '<textarea id="'.$arr_setting['id'].'" name="'.$arr_setting['id'].'" rows="14" cols="80">'.$arr_setting['value'].'</textarea>';
 								break;
 								
 								default:
-									$output .= '<input id="'.$arr_setting['id'].'" type="text" name="'.$arr_setting['id'].'" value="'.$arr_setting['value'].'" />';
+									$output .= '<input id="'.$arr_setting['id'].'" type="text" name="'.$arr_setting['id'].'" value="'.$arr_setting['value'].'" size="30" maxlength="255" />';
 								break;
 							}
-							$output .= '</form>
+							$output .= '<br /><br /><div class="button"><input type="button" class="cancel" name="cancel" onClick="Boxy.get($(\'form.boxform\')).hide()" value="'.T_('Cancel').'"></div>&nbsp;&nbsp;
+							<div class="button"><input type="submit" name="send" class="add_site" value="'.T_('Send').'" /></div>
+							</form>
 						</div>
 					</td>
 					</tr>';
