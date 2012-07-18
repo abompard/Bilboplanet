@@ -53,7 +53,7 @@ $sql = "SELECT
 		".$core->prefix."site.user_id = ".$core->prefix."user.user_id
 		AND ".$core->prefix."user.user_id = ".$core->prefix."post.user_id
 		AND user_status = 1
-	GROUP BY user_fullname
+	GROUP BY user_fullname, ".$core->prefix."user.user_id, site_url
 	ORDER BY nb_post DESC
 	LIMIT $nb";
 $rs = $core->con->select($sql);
@@ -79,7 +79,7 @@ if ($blog_settings->get('planet_vote')) {
 			".$core->prefix."site.user_id = ".$core->prefix."user.user_id
 			AND ".$core->prefix."user.user_id = ".$core->prefix."post.user_id
 			AND user_status = 1
-		GROUP BY user_fullname
+		GROUP BY user_fullname, ".$core->prefix."user.user_id, site_url
 		ORDER BY score DESC
 		LIMIT $nb";
 	$rs = $core->con->select($sql);
